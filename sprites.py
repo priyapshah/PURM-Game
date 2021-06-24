@@ -3,6 +3,7 @@ from config import *
 import math
 import random 
 from graph import *
+from path import *
 from asyncio.tasks import sleep
 import time
 
@@ -72,19 +73,23 @@ class Player(pygame.sprite.Sprite):
     #         self.facing = 'DOWN'
     
     # click to move
-    def clickMovement(self, pos):
+    def clickMovement(self, pos, mode):
         currX = self.rect.x
         currY = self.rect.y
         newX = pos[0]
         newY = pos[1]
-        self.getPath(currX, currY, newX, newY)
+        self.getPath(currX, currY, newX, newY, mode)
 
-    def getPath(self, currX, currY, newX, newY):
-        # Implement algorithm here
-        path = self.game.graph.bfs(int(currX/32), int(currY/32), int(newX/32), int(newY/32))
+    def getPath(self, currX, currY, newX, newY, mode):
+        # Call algorithm here
+        if (mode == 'd') :
+            path = self.game.graph.dfs(int(currX/32), int(currY/32), int(newX/32), int(newY/32))
+        else: 
+            path = self.game.graph.bfs(int(currX/32), int(currY/32), int(newX/32), int(newY/32))
         for i in path:
             self.rect.x = i.x
             self.rect.y = i.y
+            Path(self.game, int(i.x/32), int(i.y/32))
             self.game.draw()
             time.sleep(.10)
         return None

@@ -3,6 +3,8 @@ from sprites import *
 from config import *
 from wall import *
 from graph import *
+from path import *
+from characters import *
 import sys
 
 class Game:
@@ -18,14 +20,20 @@ class Game:
 
         self.character_spritesheet = Spritesheet('img/ch3.png')
         self.terrain_spritesheet = Spritesheet('img/mapchip.gif')
+    
+        self.mode = 'b'
 
     def createTileMap(self, tilemap):
-        self.graph = Graph(tilemap)
+        self.graph = Graph(tilemap, self)
         for i, row in enumerate(tilemap):
             for j, column in enumerate(row):
                 if column == 'P':
                     self.createTile(tilemap[i][j+1], i, j)
                     Player(self, j, i)
+                    continue
+                elif column == 'K':
+                    self.createTile(tilemap[i][j+1], i, j)
+                    Character(self, j, i, 0, 6)
                     continue
                 else:
                     self.createTile(column, i, j)
@@ -71,12 +79,12 @@ class Game:
         self.enemies = pygame.sprite.LayeredUpdates()
         self.attacks = pygame.sprite.LayeredUpdates()
         self.hero = pygame.sprite.LayeredUpdates()
+        self.path = pygame.sprite.LayeredUpdates()
+        self.characters = pygame.sprite.LayeredUpdates()
 
     def clearBoard(self):
         for sprite in self.all_sprites:
             sprite.kill()
-        
-
 
     def events(self):
         for event in pygame.event.get():
@@ -89,12 +97,27 @@ class Game:
                     pos = pygame.mouse.get_pos()
 
                     # move only the first sprite
-                    Player.clickMovement(self.hero.get_sprite(0), pos)
+                    Player.clickMovement(self.hero.get_sprite(0), pos, self.mode)
+
+                    for sprite in self.path:
+                         sprite.kill()
+
 
             if pygame.key.get_pressed()[pygame.K_SPACE] and self.DoorEvent(1, self.hero.get_sprite(0)):
                 self.clearBoard()
                 self.createTileMap(tilemap2)
-                self.playMusic(2)
+                # self.playMusic(2)
+
+            if pygame.key.get_pressed()[pygame.K_c]:
+                Wall(self, 96, 96)
+                self.update()
+
+            if pygame.key.get_pressed()[pygame.K_d]:
+                self.mode = 'd'
+
+            if pygame.key.get_pressed()[pygame.K_b]:
+                self.mode = 'b'
+                
 
     def DoorEvent(self, tilemap, Player):
         if tilemap == 1:
@@ -126,8 +149,7 @@ game = Game()
 game.newGame()
 
 game.createTileMap(tilemap1)
-game.playMusic(1)
-
+# game.playMusic(1)
 
 
 while game.running:

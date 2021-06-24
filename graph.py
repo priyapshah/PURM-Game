@@ -1,4 +1,6 @@
 from config import *
+from path import *
+import time
 
 class Node():
     def __init__(self, x, y):
@@ -7,8 +9,9 @@ class Node():
         self.y = y
 
 class Graph():
-    def __init__(self, tilemap):
+    def __init__(self, tilemap, game):
         self.nodes = []
+        self.game = game
 
         # Add node for every cell
         for row in range(len(tilemap)):
@@ -60,8 +63,36 @@ class Graph():
 
             for neighbor in curr.adj_list:
                 if neighbor not in visited:
+                    # ExpandPath(self.game, int(neighbor.x/32), int(neighbor.y/32))
+                    # time.sleep(0.03)
+                    # self.game.draw()
                     visited.append(neighbor)
                     queue.append(neighbor)
+                    parents[neighbor] = curr
+
+                if neighbor == self.nodes[endX][endY]:
+                    return self.getPath(x, y, endX, endY, parents)
+        return[]
+
+    def dfs(self, x, y, endX, endY):
+        visited = []
+        stack = []
+        parents = {}
+
+        curr = self.nodes[x][y]
+        stack.append(curr)
+        visited.append(curr)
+
+        while stack:
+            curr = stack.pop()
+
+            for neighbor in curr.adj_list:
+                if neighbor not in visited:
+                    ExpandPath(self.game, int(neighbor.x/32), int(neighbor.y/32))
+                    time.sleep(0.03)
+                    self.game.draw()
+                    visited.append(neighbor)
+                    stack.append(neighbor)
                     parents[neighbor] = curr
 
                 if neighbor == self.nodes[endX][endY]:
