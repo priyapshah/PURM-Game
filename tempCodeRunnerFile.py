@@ -1,0 +1,1 @@
+game.playMusic(1)

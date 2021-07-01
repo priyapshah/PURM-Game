@@ -15,15 +15,18 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.clock = pygame.time.Clock()
-       # self.font = pygame.font.FONT('Arial, 32')
         self.running = True
 
+        # load images 
         self.character_spritesheet = Spritesheet('img/ch3.png')
         self.terrain_spritesheet = Spritesheet('img/mapchip.gif')
     
+        # start game with BFS traversal 
         self.mode = 'b'
 
+    # Read in tilemap and create the tiles on the game screen
     def createTileMap(self, tilemap):
+        self.currMap = tilemap
         self.graph = Graph(tilemap, self)
         for i, row in enumerate(tilemap):
             for j, column in enumerate(row):
@@ -38,13 +41,14 @@ class Game:
                 else:
                     self.createTile(column, i, j)
 
+    # Call the correct tile class
     def createTile(self, char, i, j):
         if char == 'W':
             Wall(self, j, i)
         elif char == 'G':
             Ground(self, j, i, 96, 0)
         elif char == 'F':
-            Ground(self, j, i, 120, 0)
+            Ground(self, j, i, 124, 0)
         elif char == 'D':
             Ground(self, j, i, 64, 64)
         else:
@@ -52,7 +56,7 @@ class Game:
         return
 
 
-
+    # Adds background music
     def playMusic(self, int):
         if (int == 2):
             pygame.mixer.init()
@@ -68,7 +72,7 @@ class Game:
 
         #"Déjà Vu" by Mort Garson
               
-
+    # Initialize a new game
     def newGame(self):
         self.playing = True
 
@@ -82,17 +86,22 @@ class Game:
         self.path = pygame.sprite.LayeredUpdates()
         self.characters = pygame.sprite.LayeredUpdates()
 
+    # Clear the current game screen
     def clearBoard(self):
         for sprite in self.all_sprites:
             sprite.kill()
 
+    # Handle player events
     def events(self):
+        # for event in pygame.event.get():
+        #     if pygame.key.get_pressed()[pygame.K_SPACE]:
+        #         print(event)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.playing = False
                 self.running = False
 
-            # click to move
+            # Click to move
             if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
 
@@ -102,28 +111,42 @@ class Game:
                     for sprite in self.path:
                          sprite.kill()
 
-
-            if pygame.key.get_pressed()[pygame.K_SPACE] and self.DoorEvent(1, self.hero.get_sprite(0)):
+            # Change screens
+            if pygame.key.get_pressed()[pygame.K_SPACE] and event.type != 771 and self.DoorEvent(self.hero.get_sprite(0)):
                 self.clearBoard()
-                self.createTileMap(tilemap2)
+                self.createTileMap(self.nextMap)
+                continue
                 # self.playMusic(2)
 
-            if pygame.key.get_pressed()[pygame.K_c]:
-                Wall(self, 96, 96)
-                self.update()
-
+            # Switch to DFS Traversal
             if pygame.key.get_pressed()[pygame.K_d]:
                 self.mode = 'd'
 
+            # Switch to BFS Traversal
             if pygame.key.get_pressed()[pygame.K_b]:
                 self.mode = 'b'
-                
 
-    def DoorEvent(self, tilemap, Player):
-        if tilemap == 1:
+            # Switch to A* Traversal
+            if pygame.key.get_pressed()[pygame.K_a]:
+                self.mode = 'a'
+
+                
+    # Check if player at door
+    def DoorEvent(self, Player):
+        if self.currMap == tilemap1:
             y = self.hero.get_sprite(0).getYPosition()
             x = self.hero.get_sprite(0).getXPosition()
             if y >= 608 and x >= 544 and x <= 576:
+                self.nextMap = tilemap2
+                return 1
+            if y >= 96 and y <= 128 and x >= 608:
+                self.nextMap = tilemap3
+                return 1
+        if self.currMap == tilemap2:
+            y = self.hero.get_sprite(0).getYPosition()
+            x = self.hero.get_sprite(0).getXPosition()
+            if y <= 32 and x >= 544 and x <= 576:
+                self.nextMap = tilemap1
                 return 1
         return 0
 

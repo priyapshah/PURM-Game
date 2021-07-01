@@ -32,7 +32,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = self.y
 
     def update(self):
-        self.movement()
 
         self.rect.x += self.x_change
         self.collide_blocks('x')
@@ -41,38 +40,8 @@ class Player(pygame.sprite.Sprite):
         
         self.x_change = 0
         self.y_change = 0
-
-    def movement(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.x_change -= PLAYER_SPEED
-            self.facing = 'RIGHT'
-        if keys[pygame.K_RIGHT]:
-            self.x_change += PLAYER_SPEED
-            self.facing = 'RIGHT'
-        if keys[pygame.K_UP]:
-            self.y_change -= PLAYER_SPEED
-            self.facing = 'UP'
-        if keys[pygame.K_DOWN]:
-            self.y_change += PLAYER_SPEED
-            self.facing = 'DOWN'
-
-    # def movement(self, dir):
-    #     keys = pygame.key.get_pressed()
-    #     if dir == 'L':
-    #         self.x_change -= PLAYER_SPEED
-    #         self.facing = 'RIGHT'
-    #     if dir == 'R':
-    #         self.x_change += PLAYER_SPEED
-    #         self.facing = 'RIGHT'
-    #     if dir == 'U':
-    #         self.y_change -= PLAYER_SPEED
-    #         self.facing = 'UP'
-    #     if dir == 'D':
-    #         self.y_change += PLAYER_SPEED
-    #         self.facing = 'DOWN'
     
-    # click to move
+    # Click to move
     def clickMovement(self, pos, mode):
         currX = self.rect.x
         currY = self.rect.y
@@ -80,10 +49,13 @@ class Player(pygame.sprite.Sprite):
         newY = pos[1]
         self.getPath(currX, currY, newX, newY, mode)
 
+    # Animate movement along path
     def getPath(self, currX, currY, newX, newY, mode):
         # Call algorithm here
-        if (mode == 'd') :
+        if (mode == 'd'):
             path = self.game.graph.dfs(int(currX/32), int(currY/32), int(newX/32), int(newY/32))
+        elif (mode == 'a'):
+            path = self.game.graph.aStar(int(currX/32), int(currY/32), int(newX/32), int(newY/32))
         else: 
             path = self.game.graph.bfs(int(currX/32), int(currY/32), int(newX/32), int(newY/32))
         for i in path:
