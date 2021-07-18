@@ -2,6 +2,7 @@ from config import *
 from path import *
 import time
 from heapq import *
+import math as m
 
 # Create a node in the graph
 class Node():
@@ -141,7 +142,7 @@ class Graph():
         return[]
 
     def distance(self, x, y, endX, endY):
-        return abs(x - endX) + abs(y - endY)
+        return m.sqrt(m.pow((x-endX),2) + m.pow((y-endY),2))
 
     def findMin(self, list):
         self.minVal = float('inf')
@@ -153,21 +154,38 @@ class Graph():
 
     def iddfs(self, x, y, endX, endY):
         for depth in range(100):
-            if (self.dls(x, y, endX, endY)):
-                return True
-        return False
+            # reset the color
+            p = self.idfs(x, y, endX, endY, depth)
+            if not len(p) == 0:
+                return self.getPath(x, y, endX, endY, p)
+        return []
 
-    def dls(self, x, y, endX, endY, depth):
-        if self.nodes[x][y] == self.nodes[endX][endY]:
-            return True
-        if depth <= 0:
-            return True
-        for neighbor in self.nodes[x][y].adj_list:
-            if (self.dls(neighbor.x, neighbor.y, endX, endY, depth-1)):
-                return True
-        return False
+    def idfs(self, x, y, endX, endY, depth):
+        visited = []
+        stack = []
+        parents = {}
 
-        # Russel and Norvig AI a modern approach
+        curr = self.nodes[x][y]
+        stack.append(curr)
+        visited.append(curr)
+
+        while stack and depth > 0:
+            curr = stack.pop()
+            depth -= 1
+
+            for sprite in self.game.path:
+                sprite.kill()
+
+            for neighbor in curr.adj_list:
+                if neighbor not in visited:
+                    self.colorSearch(neighbor, 'blue')
+                    visited.append(neighbor)
+                    stack.append(neighbor)
+                    parents[neighbor] = curr
+
+                if neighbor == self.nodes[endX][endY]:
+                    return parents
+        return[]
 
 
     def colorSearch(self, neighbor, color):

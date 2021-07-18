@@ -25,7 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.facing = 'DOWN'
 
         # sprite looks
-        self.image = self.game.character_spritesheet.get_sprite(85, 5, self.width, self.height)
+        self.image = self.game.character_spritesheet.get_sprite(85, 10, self.width, self.height)
 
         self.rect = self.image.get_rect()
         self.rect.x = self.x
@@ -34,19 +34,22 @@ class Player(pygame.sprite.Sprite):
     def update(self):
 
         self.rect.x += self.x_change
-        self.collide_blocks('x')
         self.rect.y += self.y_change
-        self.collide_blocks('y')
+
+        self.collide_enemy()
         
         self.x_change = 0
         self.y_change = 0
     
     # Click to move
-    def clickMovement(self, pos, mode):
+    def clickMovement(self, pos, mode, tilemap):
+        self.walls = ['W', 'F']
         currX = self.rect.x
         currY = self.rect.y
         newX = pos[0]
         newY = pos[1]
+        if tilemap[int (newY/TILESIZE)][int (newX/TILESIZE)] in self.walls:
+            return
         self.getPath(currX, currY, newX, newY, mode)
 
     # Animate movement along path
@@ -56,6 +59,8 @@ class Player(pygame.sprite.Sprite):
             path = self.game.graph.dfs(int(currX/32), int(currY/32), int(newX/32), int(newY/32))
         elif (mode == 'a'):
             path = self.game.graph.aStar(int(currX/32), int(currY/32), int(newX/32), int(newY/32))
+        elif (mode == 'i'):
+            path = self.game.graph.iddfs(int(currX/32), int(currY/32), int(newX/32), int(newY/32))    
         else: 
             path = self.game.graph.bfs(int(currX/32), int(currY/32), int(newX/32), int(newY/32))
         for i in path:
@@ -66,23 +71,11 @@ class Player(pygame.sprite.Sprite):
             time.sleep(.10)
         return None
 
-    def collide_blocks(self, direction):
-        if direction == 'x':
-            # last param is bool to delete sprite on collision
-            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
-            if hits:
-                if self.x_change > 0:
-                    self.rect.x = hits[0].rect.left - self.rect.width
-                if self.x_change < 0:
-                    self.rect.x = hits[0].rect.right
-
-        if direction == 'y':
-            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
-            if hits:
-                if self.y_change > 0:
-                    self.rect.y = hits[0].rect.top - self.rect.height
-                if self.y_change < 0:
-                    self.rect.y = hits[0].rect.bottom
+    def collide_enemy(self):
+        hits = pygame.sprite.spritecollide(self, self.game.enemies, False)
+        if hits:
+            self.kill()
+            self.game.playing = False
 
     def getXPosition(self):
         return self.rect.x

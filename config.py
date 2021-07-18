@@ -6,26 +6,29 @@ HEIGHT = 640
 TILESIZE = 32
 FPS = 60
 
-PLAYER_LAYER = 4
-CHARACTER_LAYER = 4
+PLAYER_LAYER = 5
+CHARACTER_LAYER = 5
+ENEMY_LAYER = 5
 PATH_LAYER = 3
 WALL_LAYER = 2
 GROUND_LAYER = 1
 
 PLAYER_SPEED = 3
+ENEMY_SPEED = 1
 
 # COLORS
 
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
+WHITE = (255, 255, 255)
 
 tilemap1 = [
     'WWWWWWWWWWWWWWWWWWWW',
     'W..................W',
     'W..................W',
     'W..................D',
-    'W..................W',
+    'W...E..............W',
     'W..................W',
     'W..................W',
     'W..................W',
