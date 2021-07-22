@@ -102,6 +102,7 @@ class Graph():
 
         while stack:
             curr = stack.pop()
+            self.colorSearch(curr, 'red')
 
             for neighbor in curr.adj_list:
                 if neighbor not in visited:
@@ -219,5 +220,11 @@ class Graph():
                 nextNode = neighbors[random.randint(0, len(neighbors)-1)]
                 stack.append(nextNode)
                 path.append(nextNode)
+        
+            if not stack and len(path) < 120:
+                visited = []
+                stack.append(path[random.randint(0, len(path)-1)])
+                # stack.append(self.nodes[random.randint(0, 20)][random.randint(0, 15)])
+
 
         return path
