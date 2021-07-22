@@ -1,1 +1,0 @@
-self.intro_background = self.terrain_spritesheet.get_sprite(32, 0, self.width, self.height)
