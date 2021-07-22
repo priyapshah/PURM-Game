@@ -3,6 +3,7 @@ from path import *
 import time
 from heapq import *
 import math as m
+import random
 
 # Create a node in the graph
 class Node():
@@ -16,6 +17,8 @@ class Node():
         self.g = 0
         self.h = 0
         self.f = 0
+
+        self.depth = 0
 
 # Create a graph of the tilemap/screen
 class Graph():
@@ -44,6 +47,7 @@ class Graph():
                 if r != len(tilemap[0]) - 1 and tilemap[c][r+1] not in self.walls:
                     self.nodes[r][c].adj_list.append(self.nodes[r+1][c])
 
+
     # Backtrack to get the path
     def getPath(self, x, y, endX, endY, parents):
         path = []
@@ -59,7 +63,7 @@ class Graph():
         return path
 
     # Breadth First Search Algorithm
-    def bfs(self, x, y, endX, endY):
+    def bfs(self, x, y, endX, endY, showPath):
         visited = []
         queue = []
         parents = {}
@@ -71,11 +75,13 @@ class Graph():
         while queue:
             curr = queue[0]
             queue.pop(0)
-            self.colorSearch(curr, 'red')
+            if showPath:
+                self.colorSearch(curr, 'red')
 
             for neighbor in curr.adj_list:
                 if neighbor not in visited:
-                    self.colorSearch(neighbor, 'blue')
+                    if showPath:
+                        self.colorSearch(neighbor, 'blue')
                     visited.append(neighbor)
                     queue.append(neighbor)
                     parents[neighbor] = curr
@@ -154,7 +160,6 @@ class Graph():
 
     def iddfs(self, x, y, endX, endY):
         for depth in range(100):
-            # reset the color
             p = self.idfs(x, y, endX, endY, depth)
             if not len(p) == 0:
                 return self.getPath(x, y, endX, endY, p)
@@ -169,12 +174,11 @@ class Graph():
         stack.append(curr)
         visited.append(curr)
 
-        while stack and depth > 0:
+        while stack:
             curr = stack.pop()
-            depth -= 1
 
-            for sprite in self.game.path:
-                sprite.kill()
+            if curr.depth >= depth:
+                continue
 
             for neighbor in curr.adj_list:
                 if neighbor not in visited:
@@ -182,6 +186,7 @@ class Graph():
                     visited.append(neighbor)
                     stack.append(neighbor)
                     parents[neighbor] = curr
+                    neighbor.depth = curr.depth + 1
 
                 if neighbor == self.nodes[endX][endY]:
                     return parents
@@ -192,3 +197,27 @@ class Graph():
         ExpandPath(self.game, int(neighbor.x/32), int(neighbor.y/32), color)
         time.sleep(0.01)
         self.game.draw()
+
+
+    def mazeDFS(self, x, y):
+        visited = []
+        stack = []
+        path = []
+
+        curr = self.nodes[x][y]
+        stack.append(curr)
+        visited.append(curr)
+
+        while stack:
+            curr = stack.pop()
+            neighbors = []
+            for neighbor in curr.adj_list:
+                if neighbor not in visited:
+                    neighbors.append(neighbor)
+                    visited.append(neighbor)
+            if len(neighbors) > 0:
+                nextNode = neighbors[random.randint(0, len(neighbors)-1)]
+                stack.append(nextNode)
+                path.append(nextNode)
+
+        return path

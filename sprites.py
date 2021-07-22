@@ -60,9 +60,11 @@ class Player(pygame.sprite.Sprite):
         elif (mode == 'a'):
             path = self.game.graph.aStar(int(currX/32), int(currY/32), int(newX/32), int(newY/32))
         elif (mode == 'i'):
-            path = self.game.graph.iddfs(int(currX/32), int(currY/32), int(newX/32), int(newY/32))    
+            path = self.game.graph.iddfs(int(currX/32), int(currY/32), int(newX/32), int(newY/32)) 
+        elif (mode == 'b'):
+            path = self.game.graph.bfs(int(currX/32), int(currY/32), int(newX/32), int(newY/32), True)    
         else: 
-            path = self.game.graph.bfs(int(currX/32), int(currY/32), int(newX/32), int(newY/32))
+            path = self.game.graph.bfs(int(currX/32), int(currY/32), int(newX/32), int(newY/32), False)
         for i in path:
             self.rect.x = i.x
             self.rect.y = i.y
