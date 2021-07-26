@@ -10,6 +10,7 @@ __pycache__
 *$py.class
 
 tempCodeRunnerFile.py
+.ds_store
 
 # C extensions
 *.so
