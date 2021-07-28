@@ -26,6 +26,7 @@ class Graph():
         self.walls = ['W', 'F']
         self.nodes = []
         self.game = game
+        self.numNodes = 0
 
         self.c = [(250,235,215), (255,239,219), (238,223,204), (205,192,176), (139,131,120), (0,255,255), (127,255,212), (118,238,198), (102,205,170), (69,139,116), (240,255,255), (224,238,238), (193,205,205), (131,139,139), (227,207,87), (245,245,220), (255,228,196), (238,213,183), (205,183,158), (139,125,107), (0,0,0), (255,235,205), (0,0,255), (0,0,238), (0,0,205), (0,0,139), (138,43,226), (156,102,31), (165,42,42), (255,64,64), (238,59,59), (205,51,51), (139,35,35), (222,184,135), (255,211,155), (238,197,145), (205,170,125), (139,115,85), (138,54,15), (138,51,36), (95,158,160), (152,245,255), (142,229,238), (122,197,205), (83,134,139), (255,97,3), (255,153,18), (237,145,33), (127,255,0), (118,238,0), (102,205,0), (69,139,0), (210,105,30), (255,127,36), (238,118,33), (205,102,29), (139,69,19), (61,89,171), (61,145,64), (128,138,135), (255,127,80), (255,114,86), (238,106,80), (205,91,69), (139,62,47), (100,149,237), (255,248,220), (238,232,205), (205,200,177), (139,136,120), (220,20,60), (0,238,238), (0,205,205), (0,139,139), (184,134,11), (255,185,15), (238,173,14), (205,149,12), (139,101,8), (169,169,169), (0,100,0), (189,183,107), (85,107,47), (202,255,112), (188,238,104), (162,205,90), (110,139,61), (255,140,0), (255,127,0), (238,118,0), (205,102,0), (139,69,0), (153,50,204), (191,62,255), (178,58,238), (154,50,205), (104,34,139), (233,150,122), (143,188,143), (193,255,193), (180,238,180), (155,205,155), (105,139,105), (72,61,139), (47,79,79), (151,255,255), (141,238,238), (121,205,205), (82,139,139), (0,206,209), (148,0,211), (255,20,147), (238,18,137), (205,16,118), (139,10,80), (0,191,255), (0,178,238), (0,154,205), (0,104,139), (105,105,105), (30,144,255), (28,134,238), (24,116,205), (16,78,139), (252,230,201), (0,201,87), (178,34,34), (255,48,48), (238,44,44), (205,38,38), (139,26,26), (255,125,64), (255,250,240), (34,139,34), (220,220,220), (248,248,255), (255,215,0), (238,201,0), (205,173,0), (139,117,0), (218,165,32), (255,193,37), (238,180,34), (205,155,29), (139,105,20)]
 
@@ -34,6 +35,7 @@ class Graph():
             self.nodes.append([])
             for col in range(len(tilemap[0])):
                 self.nodes[row].append(Node(row, col))
+                self.numNodes = self.numNodes + 1
 
         # Add edges
         for r in range(len(tilemap)):
@@ -175,7 +177,6 @@ class Graph():
 
         curr = self.nodes[x][y]
         curr.depth = 0
-        print(curr.depth)
         stack.append(curr)
         visited.append(curr)
 
@@ -187,15 +188,16 @@ class Graph():
 
             visited.append(curr)
             self.colorSearch(curr, color)
+            # time.sleep(3)
 
             for neighbor in curr.adj_list:
                 
-                if neighbor not in visited:
+                if neighbor not in visited and curr.depth + 1 != depth:
                     parents[neighbor] = curr
                     neighbor.depth = curr.depth + 1
                     stack.append(neighbor)
 
-                if neighbor == self.nodes[endX][endY]:
+                if curr == self.nodes[endX][endY]:
                     return parents
         return[]
 
@@ -210,13 +212,15 @@ class Graph():
         visited = []
         stack = []
         path = []
+        wall = []
 
         curr = self.nodes[x][y]
         stack.append(curr)
         visited.append(curr)
 
-        while stack:
+        while (len(path) + len(wall) < self.numNodes - 1) and stack:
             curr = stack.pop()
+            path.append(curr)
             neighbors = []
             for neighbor in curr.adj_list:
                 if neighbor not in visited:
@@ -224,12 +228,17 @@ class Graph():
                     visited.append(neighbor)
             if len(neighbors) > 0:
                 nextNode = neighbors[random.randint(0, len(neighbors)-1)]
+                for n in neighbors:
+                    if n != nextNode:
+                        wall.append(n)
                 stack.append(nextNode)
-                path.append(nextNode)
         
-            if not stack and len(path) < 180:
-                visited = []
-                stack.append(path[random.randint(0, len(path)-1)])
+            if not stack:
+                nextNode = wall[random.randint(0, len(wall)-1)]
+                stack.append(nextNode)
+                for n in nextNode.adj_list:
+                    if n in visited:
+                        visited.remove(n)
                 # stack.append(self.nodes[random.randint(0, 20)][random.randint(0, 15)])
 
 
