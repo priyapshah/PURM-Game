@@ -19,7 +19,7 @@ class Enemy(pygame.sprite.Sprite):
         self.facing = random.choice(['left', 'right'])
         self.animation_loop = 1
         self.movement_loop = 0
-        self.max_travel = 500
+        self.max_travel = 200
 
         self.x_change = 0
         self.y_change = 0
@@ -50,7 +50,8 @@ class Enemy(pygame.sprite.Sprite):
             self.movement_loop +=1
             if self.movement_loop >= self.max_travel:
                 self.facing = 'left'
-        if self.game.currMap[int (self.rect.y/32)][int (self.rect.x/32)] == 'W':
+        curr = self.game.currMap[int (self.rect.y/32)][int (self.rect.x/32)]
+        if curr == 'W' or curr == 'F':
             if self.facing == 'right':
                 self.facing = 'left'
                 self.rect.x -= 9

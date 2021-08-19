@@ -3,7 +3,7 @@ from config import *
 
 class Button: 
     def __init__(self, x, y, width, height, fg_color, bg_color, content, fontsize):
-        self.font = pygame.font.Font('font.ttf', fontsize)
+        self.font = pygame.font.Font('assets/font.ttf', fontsize)
         self.content = content
 
         self.x = x
@@ -33,7 +33,7 @@ class Button:
 
 class Text: 
     def __init__(self, x, y, width, height, fg_color, content, fontsize, center):
-        self.font = pygame.font.Font('font.ttf', fontsize)
+        self.font = pygame.font.Font('assets/font.ttf', fontsize)
         self.content = content
 
         self.x = x

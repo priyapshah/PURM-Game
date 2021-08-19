@@ -21,10 +21,10 @@ class Game:
         self.running = True
 
         # load images
-        self.character_spritesheet = Spritesheet('img/ch3.png')
-        self.terrain_spritesheet = Spritesheet('img/mapchip.gif')
-        self.font = pygame.font.Font('font.ttf', 32)
-        self.intro_background = pygame.image.load('bg.jpeg').convert()
+        self.character_spritesheet = Spritesheet('assets/img/ch3.png')
+        self.terrain_spritesheet = Spritesheet('assets/img/mapchip.gif')
+        self.font = pygame.font.Font('assets/font.ttf', 32)
+        self.intro_background = pygame.image.load('assets/img/bg.jpeg').convert()
 
         self.mode = 'n'
         self.iter = 1
@@ -71,14 +71,14 @@ class Game:
     def playMusic(self, int):
         if (int == 2):
             pygame.mixer.init()
-            soundObj = pygame.mixer.Sound('sound/door.wav')
+            soundObj = pygame.mixer.Sound('assets/sound/door.wav')
             soundObj.play()
 
-            pygame.mixer.music.load('sound/bgm/castle.mid')
+            pygame.mixer.music.load('assets/sound/bgm/castle.mid')
             pygame.mixer.music.play(-1)
         else:
             pygame.mixer.init()
-            pygame.mixer.music.load('sound/bgm/castle.mid')
+            pygame.mixer.music.load('assets/sound/bgm/castle.mid')
             pygame.mixer.music.play(-1)
 
         #"Déjà Vu" by Mort Garson
