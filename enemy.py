@@ -3,6 +3,7 @@ from config import *
 import random
 import time
 
+''' Defines the characters that kill the main player if touched. '''
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game

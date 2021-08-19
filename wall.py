@@ -1,6 +1,7 @@
 import pygame
 from config import *
 
+''' Defines the objects that make up boundaries. Cannot be walked through.'''
 class Wall(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game
@@ -19,7 +20,7 @@ class Wall(pygame.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y 
 
-
+''' Defines the objects that make up the ground and can be walked on. '''
 class Ground(pygame.sprite.Sprite):
     def __init__(self, game, x, y, xV, yV):
         self.game = game

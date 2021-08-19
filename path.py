@@ -1,6 +1,7 @@
 import pygame
 from config import *
 
+''' Defines the objects that makeup the colored tiles representing the path of the player. '''
 class Path(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game

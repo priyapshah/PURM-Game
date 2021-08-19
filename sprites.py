@@ -7,6 +7,7 @@ from path import *
 from asyncio.tasks import sleep
 import time
 
+''' This class corresponds to the main character that is controlled by the user. '''
 class Player(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game
@@ -41,7 +42,7 @@ class Player(pygame.sprite.Sprite):
         self.x_change = 0
         self.y_change = 0
     
-    # Click to move
+    '''Click to move.'''
     def clickMovement(self, pos, mode, tilemap):
         self.walls = ['W', 'F']
         currX = self.rect.x
@@ -52,7 +53,7 @@ class Player(pygame.sprite.Sprite):
             return
         self.getPath(currX, currY, newX, newY, mode)
 
-    # Animate movement along path
+    '''Animate movement along path.'''
     def getPath(self, currX, currY, newX, newY, mode):
         # Call algorithm here
         if (mode == 'd'):
@@ -85,6 +86,7 @@ class Player(pygame.sprite.Sprite):
     def getYPosition(self):
         return self.rect.y
 
+''' Load images for characters. '''
 class Spritesheet:
     def __init__(self, file):
         self.sheet = pygame.image.load(file).convert()

@@ -11,6 +11,7 @@ __pycache__
 
 tempCodeRunnerFile.py
 .ds_store
+.vscode
 
 # C extensions
 *.so
