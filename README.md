@@ -6,6 +6,9 @@ This is a castle-themed video game used to teach and implement pathfinding algor
 - Iterative Deepening Depth First Search
 - Random Maze Generation via Depth First Search
 
+<p align="center"> <img width="300" alt="Screen Shot 2022-07-25 at 1 09 53 PM" src="https://user-images.githubusercontent.com/53381393/180865895-1d069808-21f2-4049-8ea7-d1bd25cf03ab.png"> <img width="300" alt="Screen Shot 2022-07-25 at 1 11 08 PM" src="https://user-images.githubusercontent.com/53381393/180865995-62e9c4ae-d38c-47f0-b7b8-f3242333f86f.png"> </p>
+
+
 ## Getting Started
 1. Navigate to a new folder and initialize an empty repository: 
 `git init`
